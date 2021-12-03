@@ -1,0 +1,3 @@
+include ':huaweiadsadapter'
+include ':app'
+rootProject.name = "mediationjitpack"
