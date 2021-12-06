@@ -33,6 +33,8 @@ This is a project to demonstrate how to use IronSource’s mediation feature wit
 6. Add the adapter and its dependencies into your project
 7. Configuration is done
 
+**Important Note:** To be able to do mediation, do not forget to disable test mode on IronSource platform.
+
 ## Huawei Ads Custom Adapter 
 | Network Key        | Network Name           |
 | ------------- |:-------------:|
