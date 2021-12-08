@@ -24,6 +24,8 @@ This is a project to demonstrate how to use IronSource’s mediation feature wit
 
 ## Create an app & Add Custom network on IronSource Platform:
 
+Make sure to check the article on **[How to use Huawei Ads with IronSource mediation ?](https://medium.com/huawei-developers/how-to-use-huawei-ads-with-ironsource-mediation-61fe6efd5f7)**
+
 1. Sign in to your [Platform Ironsource](https://platform.ironsrc.com/) and add an App
 2. Go to **SDK Networks** and click Manage Networks add Custom Adapter 
 ( **Important Note:** Your account must be activated to be able to see Custom Adapter section)
