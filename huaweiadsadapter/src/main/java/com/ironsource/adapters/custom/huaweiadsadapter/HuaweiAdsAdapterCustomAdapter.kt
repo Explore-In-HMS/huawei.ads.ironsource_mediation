@@ -7,35 +7,42 @@ import com.ironsource.mediationsdk.adunit.adapter.BaseAdapter
 import com.ironsource.mediationsdk.adunit.adapter.listener.NetworkInitializationListener
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdData
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrors
+import java.io.PrintWriter
+import java.io.StringWriter
 
 class HuaweiAdsAdapterCustomAdapter : BaseAdapter() {
+
+    private val TAG = HuaweiAdsAdapterCustomAdapter::class.simpleName
+
     override fun init(adData: AdData, context: Context, listener: NetworkInitializationListener?) {
         try {
             HwAds.init(context.applicationContext)
             listener?.onInitSuccess()
         } catch (e: Exception) {
-            Log.e(TAG, "Init failed. $e")
+            val stacktrace =
+                    StringWriter().also { e.printStackTrace(PrintWriter(it)) }.toString().trim()
+            Log.e(TAG, "Init Failed: $stacktrace")
             listener?.onInitFailed(AdapterErrors.ADAPTER_ERROR_INTERNAL, e.toString())
         }
     }
 
     override fun getNetworkSDKVersion(): String {
-        Log.e(TAG, "getNetworkSDKVersion ${HwAds.getSDKVersion()}")
+        Log.d(TAG, "getNetworkSDKVersion() = ${HwAds.getSDKVersion()}")
         return HwAds.getSDKVersion()
     }
 
     override fun getAdapterVersion(): String {
-        Log.e(TAG, "getAdapterVersion ${getVersion()}")
+        Log.d(TAG, "getAdapterVersion() = ${getVersion()}")
         return getVersion()
     }
 
     override fun setAdapterDebug(isDebug: Boolean) {
+        Log.d(TAG, "setAdapterDebug() = $isDebug")
         super.setAdapterDebug(isDebug)
     }
 
     companion object {
         fun getVersion() = ADAPTER_VERSION
         private const val ADAPTER_VERSION = "1.0"
-        private const val TAG = "CustomAdapter"
     }
 }
