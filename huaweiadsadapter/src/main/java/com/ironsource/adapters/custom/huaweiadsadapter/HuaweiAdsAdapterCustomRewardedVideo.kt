@@ -2,27 +2,37 @@ package com.ironsource.adapters.custom.huaweiadsadapter
 
 import android.app.Activity
 import android.util.Log
-import com.huawei.hms.ads.*
+import com.huawei.hms.ads.AdParam
+import com.huawei.hms.ads.HwAds
+import com.huawei.hms.ads.TagForChild
+import com.huawei.hms.ads.UnderAge
+import com.huawei.hms.ads.reward.Reward
+import com.huawei.hms.ads.reward.RewardAd
+import com.huawei.hms.ads.reward.RewardAdLoadListener
+import com.huawei.hms.ads.reward.RewardAdStatusListener
 import com.ironsource.environment.ContextProvider
-import com.ironsource.mediationsdk.adunit.adapter.BaseInterstitial
-import com.ironsource.mediationsdk.adunit.adapter.listener.InterstitialAdListener
+import com.ironsource.mediationsdk.adunit.adapter.BaseRewardedVideo
+import com.ironsource.mediationsdk.adunit.adapter.listener.RewardedVideoAdListener
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdData
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrorType
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrors
 import com.ironsource.mediationsdk.model.NetworkSettings
 
-class HuaweiAdsAdapterCustomInterstitial(networkSettings: NetworkSettings) :
-    BaseInterstitial<HuaweiAdsAdapterCustomAdapter>(networkSettings) {
-    private var mInterstitialAd: InterstitialAd? = null
+
+class HuaweiAdsAdapterCustomRewardedVideo(networkSettings: NetworkSettings) :
+    BaseRewardedVideo<HuaweiAdsAdapterCustomAdapter>(networkSettings) {
+
+    private var mRewardAd: RewardAd? = null
     private var mHuaweiAdsAdapterConfiguration = HuaweiAdsAdapterCustomAdapter()
 
     companion object {
         const val TAG = "CustomAdapter"
     }
 
-    override fun loadAd(adData: AdData, activity: Activity, listener: InterstitialAdListener) {
+    override fun loadAd(adData: AdData, activity: Activity, listener: RewardedVideoAdListener) {
         val instanceId = adData.getString("adunitid")
-        Log.d(TAG, "loadAd for instanceId: $instanceId")
+
+        Log.d(TAG, "loadAd for InstanceId: $instanceId")
 
         if (instanceId == null) {
             Log.e(TAG, "ad failed to load. instanceId is null")
@@ -37,6 +47,7 @@ class HuaweiAdsAdapterCustomInterstitial(networkSettings: NetworkSettings) :
         val requestConfigurationBuilder = HwAds.getRequestOptions().toBuilder()
 
         val childDirected = adData.getString("tagforchildprotection")
+
         if (childDirected != null) {
             if (java.lang.Boolean.parseBoolean(childDirected)) {
                 requestConfigurationBuilder.setTagForChildProtection(TagForChild.TAG_FOR_CHILD_PROTECTION_TRUE)
@@ -62,37 +73,38 @@ class HuaweiAdsAdapterCustomInterstitial(networkSettings: NetworkSettings) :
         val requestConfiguration = requestConfigurationBuilder.build()
         HwAds.setRequestOptions(requestConfiguration)
 
-
         mHuaweiAdsAdapterConfiguration.setAdapterDebug(true)
 
-        mInterstitialAd = InterstitialAd(activity.applicationContext)
-        // "testb4znbuh3n2" is a dedicated test ad unit ID. Before releasing your app, replace the test ad unit ID with the formal one.
-        mInterstitialAd!!.adId = instanceId
+        // "testx9dtjwj8hp" is a dedicated test ad unit ID
+//        mRewardAd = RewardAd(activity.applicationContext, "testx9dtjwj8hp")
+        mRewardAd = RewardAd(activity.applicationContext, instanceId)
 
         val builder = AdParam.Builder()
         builder.setRequestOrigin("IronSource")
+
         val adRequest = builder.build()
-        mInterstitialAd!!.loadAd(adRequest)
 
-
-        val adListener: AdListener = object : AdListener() {
-            override fun onAdLoaded() {
-                // Called when an ad is loaded successfully.
+        val rewardAdLoadListener: RewardAdLoadListener = object : RewardAdLoadListener() {
+            override fun onRewardedLoaded() {
+                Log.d(TAG, "onRewardedLoaded")
                 listener.onAdLoadSuccess()
             }
 
-            override fun onAdFailed(errorCode: Int) {
-                // Called when an ad fails to be loaded.
-                Log.e(TAG, "ad failed to load. instanceId is null")
+            override fun onRewardAdFailedToLoad(errorCode: Int) {
+                Log.e(TAG, "onRewardAdFailedToLoad")
+                listener.onAdLoadFailed(
+                    AdapterErrorType.ADAPTER_ERROR_TYPE_INTERNAL,
+                    AdapterErrors.ADAPTER_ERROR_INTERNAL,
+                    errorCode.toString()
+                )
             }
         }
-        mInterstitialAd!!.adListener = adListener
 
+        mRewardAd!!.loadAd(adRequest, rewardAdLoadListener)
     }
 
-    override fun showAd(adData: AdData, listener: InterstitialAdListener) {
+    override fun showAd(adData: AdData, listener: RewardedVideoAdListener) {
         val instanceId = adData.getString("adunitid")
-        Log.e(TAG, "showAd for instanceId: $instanceId")
 
         if (instanceId == null) {
             Log.e(TAG, "ad failed to show. instanceId is null")
@@ -103,61 +115,54 @@ class HuaweiAdsAdapterCustomInterstitial(networkSettings: NetworkSettings) :
             )
             return
         }
+
         try {
-            mInterstitialAd!!.adListener = object : AdListener() {
-                override fun onAdClosed() {
-                    Log.e(TAG, "ad closed")
-                    listener.onAdClosed()
-                    super.onAdClosed()
+            if (mRewardAd!!.isLoaded) {
+
+                val statusListener = object : RewardAdStatusListener() {
+
+                    override fun onRewardAdClosed() {
+                        Log.d(TAG, "onRewardAdClosed")
+                        listener.onAdClosed()
+                        super.onRewardAdClosed()
+                    }
+
+                    override fun onRewardAdFailedToShow(p0: Int) {
+                        Log.e(TAG, "onRewardAdFailedToShow : $p0")
+                        listener.onAdLoadFailed(
+                            AdapterErrorType.ADAPTER_ERROR_TYPE_INTERNAL,
+                            AdapterErrors.ADAPTER_ERROR_INTERNAL,
+                            p0.toString()
+                        )
+                        super.onRewardAdFailedToShow(p0)
+                    }
+
+                    override fun onRewardAdOpened() {
+                        Log.e(TAG, "onRewardAdOpened")
+                        listener.onAdOpened()
+                        super.onRewardAdOpened()
+                    }
+
+                    override fun onRewarded(p0: Reward?) {
+                        Log.e(TAG, "onRewarded")
+                        listener.onAdRewarded()
+                        super.onRewarded(p0)
+                    }
                 }
 
-                override fun onAdFailed(p0: Int) {
-                    Log.e(TAG, "ad failed to show. ${p0.toString()}")
-                    mInterstitialAd = null
-                    listener.onAdShowFailed(
-                        AdapterErrors.ADAPTER_ERROR_INTERNAL,
-                        p0.toString()
-                    )
-                    super.onAdFailed(p0)
-                }
-
-                override fun onAdLeave() {
-                    listener.onAdClosed()
-                    super.onAdLeave()
-                }
-
-                override fun onAdOpened() {
-                    mInterstitialAd = null
-                    listener.onAdOpened()
-                    listener.onAdShowSuccess()
-                    super.onAdOpened()
-                }
-
-                override fun onAdLoaded() {
-                    listener.onAdLoadSuccess()
-                    super.onAdLoaded()
-                }
-
-                override fun onAdClicked() {
-                    listener.onAdClicked()
-                    super.onAdClicked()
-                }
-
+                mRewardAd!!.show(ContextProvider.getInstance().currentActiveActivity,statusListener)
             }
-            mInterstitialAd!!.show(ContextProvider.getInstance().currentActiveActivity)
 
         } catch (e: Exception) {
 
-            Log.e(TAG, "ad failed to show. $e")
-            mInterstitialAd = null
+            Log.e(TAG, "Ad failed to show. $e")
+            mRewardAd = null
             listener.onAdShowFailed(AdapterErrors.ADAPTER_ERROR_INTERNAL, e.toString())
         }
-
-
     }
 
     override fun isAdAvailable(adData: AdData): Boolean {
-        Log.e(TAG, "isAdAvailable. ${mInterstitialAd != null}")
-        return mInterstitialAd != null
+        Log.e(TAG, "isAdAvailable. ${mRewardAd != null}")
+        return mRewardAd != null
     }
 }
