@@ -10,26 +10,26 @@ import com.ironsource.mediationsdk.adunit.adapter.utility.AdData
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrorType
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrors
 import com.ironsource.mediationsdk.model.NetworkSettings
+import java.io.StringWriter
+import java.io.PrintWriter
 
 class HuaweiAdsAdapterCustomInterstitial(networkSettings: NetworkSettings) :
-    BaseInterstitial<HuaweiAdsAdapterCustomAdapter>(networkSettings) {
+        BaseInterstitial<HuaweiAdsAdapterCustomAdapter>(networkSettings) {
     private var mInterstitialAd: InterstitialAd? = null
     private var mHuaweiAdsAdapterConfiguration = HuaweiAdsAdapterCustomAdapter()
+    private val TAG = HuaweiAdsAdapterCustomInterstitial::class.simpleName
 
-    companion object {
-        const val TAG = "CustomAdapter"
-    }
 
     override fun loadAd(adData: AdData, activity: Activity, listener: InterstitialAdListener) {
         val instanceId = adData.getString("adunitid")
-        Log.e(TAG, "loadAd for instanceId: $instanceId")
+        Log.i(TAG, "loadAd for instanceId: $instanceId")
 
         if (instanceId == null) {
             Log.e(TAG, "ad failed to load. instanceId is null")
             listener.onAdLoadFailed(
-                AdapterErrorType.ADAPTER_ERROR_TYPE_INTERNAL,
-                AdapterErrors.ADAPTER_ERROR_MISSING_PARAMS,
-                "instanceId is missing"
+                    AdapterErrorType.ADAPTER_ERROR_TYPE_INTERNAL,
+                    AdapterErrors.ADAPTER_ERROR_MISSING_PARAMS,
+                    "instanceId is missing"
             )
             return
         }
@@ -79,11 +79,13 @@ class HuaweiAdsAdapterCustomInterstitial(networkSettings: NetworkSettings) :
             override fun onAdLoaded() {
                 // Called when an ad is loaded successfully.
                 listener.onAdLoadSuccess()
+                Log.d(TAG, "onAdLoaded()")
+
             }
 
             override fun onAdFailed(errorCode: Int) {
                 // Called when an ad fails to be loaded.
-                Log.e(TAG, "ad failed to load. instanceId is null")
+                Log.e(TAG, "onAdFailed = $errorCode")
             }
         }
         mInterstitialAd!!.adListener = adListener
@@ -92,31 +94,31 @@ class HuaweiAdsAdapterCustomInterstitial(networkSettings: NetworkSettings) :
 
     override fun showAd(adData: AdData, listener: InterstitialAdListener) {
         val instanceId = adData.getString("adunitid")
-        Log.e(TAG, "showAd for instanceId: $instanceId")
+        Log.i(TAG, "showAd for instanceId: $instanceId")
 
         if (instanceId == null) {
             Log.e(TAG, "ad failed to show. instanceId is null")
             listener.onAdLoadFailed(
-                AdapterErrorType.ADAPTER_ERROR_TYPE_INTERNAL,
-                AdapterErrors.ADAPTER_ERROR_MISSING_PARAMS,
-                "instanceId is missing"
+                    AdapterErrorType.ADAPTER_ERROR_TYPE_INTERNAL,
+                    AdapterErrors.ADAPTER_ERROR_MISSING_PARAMS,
+                    "instanceId is missing"
             )
             return
         }
         try {
             mInterstitialAd!!.adListener = object : AdListener() {
                 override fun onAdClosed() {
-                    Log.e(TAG, "ad closed")
+                    Log.d(TAG, "onAdClosed()")
                     listener.onAdClosed()
                     super.onAdClosed()
                 }
 
                 override fun onAdFailed(p0: Int) {
-                    Log.e(TAG, "ad failed to show. ${p0.toString()}")
+                    Log.e(TAG, "onAdFailed() = ${p0.toString()}")
                     mInterstitialAd = null
                     listener.onAdShowFailed(
-                        AdapterErrors.ADAPTER_ERROR_INTERNAL,
-                        p0.toString()
+                            AdapterErrors.ADAPTER_ERROR_INTERNAL,
+                            p0.toString()
                     )
                     super.onAdFailed(p0)
                 }
@@ -124,6 +126,7 @@ class HuaweiAdsAdapterCustomInterstitial(networkSettings: NetworkSettings) :
                 override fun onAdLeave() {
                     listener.onAdClosed()
                     super.onAdLeave()
+                    Log.d(TAG, "onAdLeave()")
                 }
 
                 override fun onAdOpened() {
@@ -131,16 +134,19 @@ class HuaweiAdsAdapterCustomInterstitial(networkSettings: NetworkSettings) :
                     listener.onAdOpened()
                     listener.onAdShowSuccess()
                     super.onAdOpened()
+                    Log.d(TAG, "onAdOpened()")
                 }
 
                 override fun onAdLoaded() {
                     listener.onAdLoadSuccess()
                     super.onAdLoaded()
+                    Log.d(TAG, "onAdLoaded()")
                 }
 
                 override fun onAdClicked() {
                     listener.onAdClicked()
                     super.onAdClicked()
+                    Log.d(TAG, "onAdClicked()")
                 }
 
             }
@@ -148,7 +154,10 @@ class HuaweiAdsAdapterCustomInterstitial(networkSettings: NetworkSettings) :
 
         } catch (e: Exception) {
 
-            Log.e(TAG, "ad failed to show. $e")
+            val stacktrace =
+                    StringWriter().also { e.printStackTrace(PrintWriter(it)) }.toString().trim()
+            Log.e(TAG, "Request Banner Ad Failed: $stacktrace")
+
             mInterstitialAd = null
             listener.onAdShowFailed(AdapterErrors.ADAPTER_ERROR_INTERNAL, e.toString())
         }
@@ -157,7 +166,7 @@ class HuaweiAdsAdapterCustomInterstitial(networkSettings: NetworkSettings) :
     }
 
     override fun isAdAvailable(adData: AdData): Boolean {
-        Log.e(TAG, "isAdAvailable. ${mInterstitialAd != null}")
+        Log.d(TAG, "isAdAvailable. ${mInterstitialAd != null}")
         return mInterstitialAd != null
     }
 }
