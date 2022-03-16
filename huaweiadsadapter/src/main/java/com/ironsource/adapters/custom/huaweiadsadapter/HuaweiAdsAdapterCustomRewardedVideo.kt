@@ -24,18 +24,18 @@ class HuaweiAdsAdapterCustomRewardedVideo(networkSettings: NetworkSettings) :
 
     private var mRewardAd: RewardAd? = null
     private var mHuaweiAdsAdapterConfiguration = HuaweiAdsAdapterCustomAdapter()
+    private var TAG = HuaweiAdsAdapterCustomInterstitial::class.simpleName
 
-    companion object {
-        const val TAG = "CustomAdapter"
-    }
+    private var TAG_FOR_CHILD_PROTECTION = "tagforchildprotection"
+    private var TAG_UNDER_AGE_OF_PROMISE = "tagunderageofpromise"
+    private var AD_UNIT_ID = "adunitid"
 
     override fun loadAd(adData: AdData, activity: Activity, listener: RewardedVideoAdListener) {
-        val instanceId = adData.getString("adunitid")
-
-        Log.d(TAG, "loadAd for InstanceId: $instanceId")
+        val instanceId = adData.getString(AD_UNIT_ID)
+        Log.d(TAG, "Rewarded - loadAd() - for instanceId: $instanceId")
 
         if (instanceId == null) {
-            Log.e(TAG, "ad failed to load. instanceId is null")
+            Log.w(TAG, "Rewarded - loadAd() - instanceId is null")
             listener.onAdLoadFailed(
                 AdapterErrorType.ADAPTER_ERROR_TYPE_INTERNAL,
                 AdapterErrors.ADAPTER_ERROR_MISSING_PARAMS,
@@ -46,7 +46,7 @@ class HuaweiAdsAdapterCustomRewardedVideo(networkSettings: NetworkSettings) :
 
         val requestConfigurationBuilder = HwAds.getRequestOptions().toBuilder()
 
-        val childDirected = adData.getString("tagforchildprotection")
+        val childDirected = adData.getString(TAG_FOR_CHILD_PROTECTION)
 
         if (childDirected != null) {
             if (java.lang.Boolean.parseBoolean(childDirected)) {
@@ -60,7 +60,7 @@ class HuaweiAdsAdapterCustomRewardedVideo(networkSettings: NetworkSettings) :
 
         // Publishers may want to mark their requests to receive treatment for users in the
         // European Economic Area (EEA) under the age of consent.
-        val underAgeOfConsent = adData.getString("tagunderageofpromise")
+        val underAgeOfConsent = adData.getString(TAG_UNDER_AGE_OF_PROMISE)
         if (underAgeOfConsent != null) {
             if (java.lang.Boolean.parseBoolean(underAgeOfConsent)) {
                 requestConfigurationBuilder.setTagForUnderAgeOfPromise(UnderAge.PROMISE_TRUE)
@@ -76,22 +76,26 @@ class HuaweiAdsAdapterCustomRewardedVideo(networkSettings: NetworkSettings) :
         mHuaweiAdsAdapterConfiguration.setAdapterDebug(true)
 
         // "testx9dtjwj8hp" is a dedicated test ad unit ID
-//        mRewardAd = RewardAd(activity.applicationContext, "testx9dtjwj8hp")
+        //mRewardAd = RewardAd(activity.applicationContext, "testx9dtjwj8hp")
         mRewardAd = RewardAd(activity.applicationContext, instanceId)
 
         val builder = AdParam.Builder()
         builder.setRequestOrigin("IronSource")
 
+        //builder.setContentBundle()
         val adRequest = builder.build()
 
         val rewardAdLoadListener: RewardAdLoadListener = object : RewardAdLoadListener() {
             override fun onRewardedLoaded() {
-                Log.d(TAG, "onRewardedLoaded")
+                Log.d(TAG, "Rewarded - RewardAdLoadListener - onRewardedLoaded()")
                 listener.onAdLoadSuccess()
             }
 
             override fun onRewardAdFailedToLoad(errorCode: Int) {
-                Log.e(TAG, "onRewardAdFailedToLoad")
+                Log.e(
+                    TAG,
+                    "Rewarded - RewardAdLoadListener - onRewardAdFailedToLoad() - Failed to load Huawei rewarded with error code: $errorCode"
+                )
                 listener.onAdLoadFailed(
                     AdapterErrorType.ADAPTER_ERROR_TYPE_INTERNAL,
                     AdapterErrors.ADAPTER_ERROR_INTERNAL,
@@ -99,22 +103,12 @@ class HuaweiAdsAdapterCustomRewardedVideo(networkSettings: NetworkSettings) :
                 )
             }
         }
-
         mRewardAd!!.loadAd(adRequest, rewardAdLoadListener)
     }
 
     override fun showAd(adData: AdData, listener: RewardedVideoAdListener) {
-        val instanceId = adData.getString("adunitid")
-
-        if (instanceId == null) {
-            Log.e(TAG, "ad failed to show. instanceId is null")
-            listener.onAdLoadFailed(
-                AdapterErrorType.ADAPTER_ERROR_TYPE_INTERNAL,
-                AdapterErrors.ADAPTER_ERROR_MISSING_PARAMS,
-                "instanceId is missing"
-            )
-            return
-        }
+        val instanceId = adData.getString(AD_UNIT_ID)
+        Log.d(TAG, "Rewarded - showAd() - ShowAd for instanceId: ${adData.getString(AD_UNIT_ID)}")
 
         try {
             if (mRewardAd!!.isLoaded) {
@@ -122,13 +116,16 @@ class HuaweiAdsAdapterCustomRewardedVideo(networkSettings: NetworkSettings) :
                 val statusListener = object : RewardAdStatusListener() {
 
                     override fun onRewardAdClosed() {
-                        Log.d(TAG, "onRewardAdClosed")
+                        Log.d(TAG, "Rewarded - RewardAdStatusListener - onRewardAdClosed()")
                         listener.onAdClosed()
                         super.onRewardAdClosed()
                     }
 
                     override fun onRewardAdFailedToShow(p0: Int) {
-                        Log.e(TAG, "onRewardAdFailedToShow : $p0")
+                        Log.e(
+                            TAG,
+                            "Rewarded - RewardAdStatusListener - onRewardAdFailedToShow() - Failed to load Huawei rewarded video with error code ${p0}."
+                        )
                         listener.onAdLoadFailed(
                             AdapterErrorType.ADAPTER_ERROR_TYPE_INTERNAL,
                             AdapterErrors.ADAPTER_ERROR_INTERNAL,
@@ -138,13 +135,13 @@ class HuaweiAdsAdapterCustomRewardedVideo(networkSettings: NetworkSettings) :
                     }
 
                     override fun onRewardAdOpened() {
-                        Log.e(TAG, "onRewardAdOpened")
+                        Log.d(TAG, "Rewarded - RewardAdStatusListener - onRewardAdOpened()")
                         listener.onAdOpened()
                         super.onRewardAdOpened()
                     }
 
                     override fun onRewarded(p0: Reward?) {
-                        Log.e(TAG, "onRewarded")
+                        Log.d(TAG, "Rewarded - RewardAdStatusListener - onRewarded()")
                         listener.onAdRewarded()
                         super.onRewarded(p0)
                     }
@@ -154,15 +151,14 @@ class HuaweiAdsAdapterCustomRewardedVideo(networkSettings: NetworkSettings) :
             }
 
         } catch (e: Exception) {
-
-            Log.e(TAG, "Ad failed to show. $e")
+            Log.e(TAG, "Rewarded - show() - Rewarded ad show failed - $e")
             mRewardAd = null
             listener.onAdShowFailed(AdapterErrors.ADAPTER_ERROR_INTERNAL, e.toString())
         }
     }
 
     override fun isAdAvailable(adData: AdData): Boolean {
-        Log.e(TAG, "isAdAvailable. ${mRewardAd != null}")
+        Log.d(TAG, "Rewarded - isAdAvailable() - Rewarded ad show failed - ${mRewardAd != null}")
         return mRewardAd != null
     }
 }
