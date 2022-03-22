@@ -1,6 +1,6 @@
 # Huawei-IronSource Mediation Github Documentation
 
-![Latest Version](https://img.shields.io/badge/latestVersion-1.0.4-yellow) ![Kotlin](https://img.shields.io/badge/language-kotlin-blue)
+![Latest Version](https://img.shields.io/badge/latestVersion-1.1.0-yellow) ![Kotlin](https://img.shields.io/badge/language-kotlin-blue)
 <br>
 ![Supported Platforms](https://img.shields.io/badge/Supported_Platforms:-Native_Android_-orange)
 
@@ -27,12 +27,12 @@ This is a project to demonstrate how to use IronSource’s mediation feature wit
 Make sure to check the article on **[How to use Huawei Ads with IronSource mediation ?](https://medium.com/huawei-developers/how-to-use-huawei-ads-with-ironsource-mediation-61fe6efd5f7)**
 
 1. Sign in to your [Platform Ironsource](https://platform.ironsrc.com/) and add an App
-2. Go to **SDK Networks** and click Manage Networks add Custom Adapter
+2. Go to **SDK Networks**, click Manage Networks and add Custom Adapter
    ( **Important Note:** Your account must be activated to be able to see Custom Adapter section)
 3. Enter the Network Key ( Network Key is : 15b993999)
 4. Enter the [ClientID and SecretKey](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/reporting-api-client-id-and-key-0000001050933698) that obtained from Huawei Console
-5. Click the edit button and add AdUnitID
-6. Add the adapter and its dependencies into your project
+5. Click the setup button and update requested parameters (AdUnitID, Rate, TagUnderAgeOfPromise, etc...)
+6. [Add the adapter and its dependencies into your project](https://github.com/Explore-In-HMS/huawei.ads.ironsource_mediation/tree/dev#integrate-the-huawei-mediation-sdk)
 7. Configuration is done
 
 **Important Note:** To be able to do mediation, do not forget to disable test mode on IronSource platform.
@@ -111,6 +111,10 @@ The HUAWEI Ads SDK (com.huawei.hms:ads) has integrated the required permissions.
 **android.permission.WRITE_CALENDAR:** Creates a calendar event when a user clicks the subscription button in an ad. (The permission can be removed if not necessary.) <br />
 
 # Version Change History
+
+## 1.1.0
+
+Rewarded ad support added
 
 ## 1.0.4
 
