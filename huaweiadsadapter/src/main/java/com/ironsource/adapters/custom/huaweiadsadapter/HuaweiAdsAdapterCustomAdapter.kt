@@ -11,8 +11,9 @@ import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrors
 class HuaweiAdsAdapterCustomAdapter : BaseAdapter() {
 
     private fun getVersion() = ADAPTER_VERSION
-    private var ADAPTER_VERSION = "1.0"
-    private var TAG = HuaweiAdsAdapterCustomAdapter::class.simpleName
+    private var ADAPTER_VERSION = "1.1.0"
+    private val TAG = HuaweiAdsAdapterCustomAdapter::class.simpleName
+
 
     override fun init(adData: AdData, context: Context, listener: NetworkInitializationListener?) {
         Log.d(TAG, "Adapter - init()")
@@ -27,12 +28,12 @@ class HuaweiAdsAdapterCustomAdapter : BaseAdapter() {
     }
 
     override fun getNetworkSDKVersion(): String {
-        Log.e(TAG, "Adapter - getNetworkSDKVersion ${HwAds.getSDKVersion()}")
+        Log.d(TAG, "Adapter - getNetworkSDKVersion ${HwAds.getSDKVersion()}")
         return HwAds.getSDKVersion()
     }
 
     override fun getAdapterVersion(): String {
-        Log.e(TAG, "Adapter - getAdapterVersion ${getVersion()}")
+        Log.d(TAG, "Adapter - getAdapterVersion ${getVersion()}")
         return getVersion()
     }
 

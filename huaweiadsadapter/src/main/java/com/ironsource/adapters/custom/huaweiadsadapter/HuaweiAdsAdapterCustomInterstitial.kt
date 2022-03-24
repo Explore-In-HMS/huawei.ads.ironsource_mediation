@@ -15,18 +15,18 @@ class HuaweiAdsAdapterCustomInterstitial(networkSettings: NetworkSettings) :
     BaseInterstitial<HuaweiAdsAdapterCustomAdapter>(networkSettings) {
     private var mInterstitialAd: InterstitialAd? = null
     private var mHuaweiAdsAdapterConfiguration = HuaweiAdsAdapterCustomAdapter()
-    var TAG = HuaweiAdsAdapterCustomInterstitial::class.simpleName
+    private val TAG = HuaweiAdsAdapterCustomInterstitial::class.simpleName
 
-    private var AD_UNIT_ID = "adunitid"
-    private var TAG_FOR_CHILD_PROTECTION = "tagforchildprotection"
-    private var TAG_UNDER_AGE_OF_PROMISE = "tagunderageofpromise"
+    private val AD_UNIT_ID = "adunitid"
+    private val TAG_FOR_CHILD_PROTECTION = "tagforchildprotection"
+    private val TAG_UNDER_AGE_OF_PROMISE = "tagunderageofpromise"
 
     override fun loadAd(adData: AdData, activity: Activity, listener: InterstitialAdListener) {
         val instanceId = adData.getString(AD_UNIT_ID)
         Log.d(TAG, "Interstitial - loadAd() - for instanceId: $instanceId")
 
         if (instanceId == null) {
-            Log.w(TAG, "Interstitial - loadAd() - instanceId is null")
+            Log.e(TAG, "Interstitial - loadAd() - instanceId is null")
             listener.onAdLoadFailed(
                 AdapterErrorType.ADAPTER_ERROR_TYPE_INTERNAL,
                 AdapterErrors.ADAPTER_ERROR_MISSING_PARAMS,

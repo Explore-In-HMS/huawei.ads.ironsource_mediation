@@ -24,11 +24,11 @@ class HuaweiAdsAdapterCustomRewardedVideo(networkSettings: NetworkSettings) :
 
     private var mRewardAd: RewardAd? = null
     private var mHuaweiAdsAdapterConfiguration = HuaweiAdsAdapterCustomAdapter()
-    private var TAG = HuaweiAdsAdapterCustomInterstitial::class.simpleName
+    private val TAG = HuaweiAdsAdapterCustomInterstitial::class.simpleName
 
-    private var TAG_FOR_CHILD_PROTECTION = "tagforchildprotection"
-    private var TAG_UNDER_AGE_OF_PROMISE = "tagunderageofpromise"
-    private var AD_UNIT_ID = "adunitid"
+    private val TAG_FOR_CHILD_PROTECTION = "tagforchildprotection"
+    private val TAG_UNDER_AGE_OF_PROMISE = "tagunderageofpromise"
+    private val AD_UNIT_ID = "adunitid"
 
     override fun loadAd(adData: AdData, activity: Activity, listener: RewardedVideoAdListener) {
         val instanceId = adData.getString(AD_UNIT_ID)
