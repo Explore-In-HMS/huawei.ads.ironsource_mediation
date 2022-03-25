@@ -40,10 +40,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.10"
 
-
-    implementation 'com.ironsource.sdk:mediationsdk:7.1.11.1'
-    implementation 'com.huawei.hms:ads:3.4.49.301'
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'com.ironsource.sdk:mediationsdk:7.2.1'
+    implementation 'com.huawei.hms:ads:3.4.51.300'
+    implementation "androidx.core:core-ktx:+"
 }
 repositories {
     mavenCentral()

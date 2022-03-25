@@ -1,6 +1,6 @@
 # Huawei-IronSource Mediation Github Documentation
 
-![Latest Version](https://img.shields.io/badge/latestVersion-1.0.4-yellow) ![Kotlin](https://img.shields.io/badge/language-kotlin-blue)
+![Latest Version](https://img.shields.io/badge/latestVersion-1.1.0-yellow) ![Kotlin](https://img.shields.io/badge/language-kotlin-blue)
 <br>
 ![Supported Platforms](https://img.shields.io/badge/Supported_Platforms:-Native_Android_-orange)
 
@@ -11,13 +11,13 @@ This is a project to demonstrate how to use IronSource’s mediation feature wit
 
 # Compatibility
 
-|   |  | Interstitial Ad |
-| --- | --- | --- |
-| Native (Java/Kotlin) |  | ✅ |
+|   |  | Interstitial Ad | Rewarded Ad |
+| --- | --- | --- | --- |
+| Native (Java/Kotlin) |  | ✅ | ✅ |
 
 
 # How to start?
-  
+
 ## Create an ad unit on Huawei Publisher Service
 
 1. Sign in to [Huawei Developer Console](https://developer.huawei.com/consumer/en/console) and create an AdUnit
@@ -27,17 +27,17 @@ This is a project to demonstrate how to use IronSource’s mediation feature wit
 Make sure to check the article on **[How to use Huawei Ads with IronSource mediation ?](https://medium.com/huawei-developers/how-to-use-huawei-ads-with-ironsource-mediation-61fe6efd5f7)**
 
 1. Sign in to your [Platform Ironsource](https://platform.ironsrc.com/) and add an App
-2. Go to **SDK Networks** and click Manage Networks add Custom Adapter 
-( **Important Note:** Your account must be activated to be able to see Custom Adapter section)
+2. Go to **SDK Networks**, click Manage Networks and add Custom Adapter
+   ( **Important Note:** Your account must be activated to be able to see Custom Adapter section)
 3. Enter the Network Key ( Network Key is : 15b993999)
 4. Enter the [ClientID and SecretKey](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/reporting-api-client-id-and-key-0000001050933698) that obtained from Huawei Console
-5. Click the edit button and add AdUnitID
-6. Add the adapter and its dependencies into your project
+5. Click the setup button and update requested parameters (AdUnitID, Rate, TagUnderAgeOfPromise, etc...)
+6. [Add the adapter and its dependencies into your project](https://github.com/Explore-In-HMS/huawei.ads.ironsource_mediation/tree/dev#integrate-the-huawei-mediation-sdk)
 7. Configuration is done
 
 **Important Note:** To be able to do mediation, do not forget to disable test mode on IronSource platform.
 
-## Huawei Ads Custom Adapter 
+## Huawei Ads Custom Adapter
 | Network Key        | Network Name           |
 | ------------- |:-------------:|
 | 15b993999     | HuaweiAds |
@@ -112,6 +112,10 @@ The HUAWEI Ads SDK (com.huawei.hms:ads) has integrated the required permissions.
 
 # Version Change History
 
+## 1.1.0
+
+Rewarded ad support added
+
 ## 1.0.4
 
 Initial release
@@ -131,13 +135,17 @@ Firstly, integrate the IronSource SDK for Android
 
 ### **Interstitial Ad**
 
-To use Interstitial ads in Native android apps, please check the IronSource SDK. Click [here](https://developers.is.com/ironsource-mobile/android/interstitial-integration-android-6-4/#step-5) to get more information about IronSource SDKs Interstitial Ad development.
+To use Interstitial ads in Native android apps, please check the IronSource SDK. Click [here](https://developers.is.com/ironsource-mobile/android/interstitial-mediation-integration-android/) to get more information about IronSource SDKs Interstitial Ad development.
+
+### **Rewarded Ad**
+To use Rewarded ads in Native android apps, please check the IronSource SDK. Click [here](https://developers.is.com/ironsource-mobile/android/rewarded-video-integration-android/) to get more information about IronSource SDKs Interstitial Ad development.
 
 ## **Sample Codes Based on Ad Types**
 
 ### **Interstitial Ad**
 
 ```jsx
+        // set the interstitial listener
         IronSource.setInterstitialListener(this)
         // add impression data listener
         IronSource.addImpressionDataListener(this)
@@ -152,6 +160,19 @@ To use Interstitial ads in Native android apps, please check the IronSource SDK.
         
 ```
 
+### **Rewarded Ad**
+
+```jsx
+        // set the IronSource rewarded video listener
+        IronSource.setRewardedVideoListener(this)
+        // add impression data listener
+        IronSource.addImpressionDataListener(this)
+         // init the IronSource SDK
+        IronSource.init(this, APP_KEY)
+        
+        if (IronSource.isRewardedVideoAvailable()) //show rewarded video
+              IronSource.showRewardedVideo()
+```
 
 # Screenshots
 
@@ -160,9 +181,14 @@ To use Interstitial ads in Native android apps, please check the IronSource SDK.
 <tr>
 
 <td>
-<img src="https://user-images.githubusercontent.com/19581388/144861246-62110f27-c0a5-451b-a28d-0cb4087c2c48.jpg" width="200">
+  <img src="https://user-images.githubusercontent.com/19581388/144861246-62110f27-c0a5-451b-a28d-0cb4087c2c48.jpg" width="200">
 
 Interstitial Ad
+</td>
+<td>
+  <img src="https://user-images.githubusercontent.com/26417041/158583315-c5a285e0-a517-4310-b167-4b47b48f0ccf.jpg" width="200">
+
+Rewarded Ad
 </td>
 
 </tr>
@@ -178,10 +204,12 @@ Interstitial Ad
 
 Interstitial Ad
 </td>
+<td>
+  <img src="https://user-images.githubusercontent.com/26417041/158583255-a4ed14f0-6c93-4f97-9a29-f55681c6eac6.jpg" width="200">
+
+Rewarded Ad
+</td>
 
 </tr>
 </tr>
 </table>
-
-
-
