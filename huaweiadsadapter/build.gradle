@@ -39,10 +39,10 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.10"
-
-    implementation 'com.ironsource.sdk:mediationsdk:7.2.1'
-    implementation 'com.huawei.hms:ads:3.4.51.300'
     implementation "androidx.core:core-ktx:+"
+    implementation 'com.ironsource.sdk:mediationsdk:7.2.1'
+
+    compileOnly('com.huawei.hms:ads:3.4.54.300')
 }
 repositories {
     mavenCentral()

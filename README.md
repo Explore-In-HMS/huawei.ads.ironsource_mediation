@@ -1,6 +1,6 @@
 # Huawei-IronSource Mediation Github Documentation
 
-![Latest Version](https://img.shields.io/badge/latestVersion-1.1.0-yellow) ![Kotlin](https://img.shields.io/badge/language-kotlin-blue)
+![Latest Version](https://img.shields.io/badge/latestVersion-1.1.1-yellow) ![Kotlin](https://img.shields.io/badge/language-kotlin-blue)
 <br>
 ![Supported Platforms](https://img.shields.io/badge/Supported_Platforms:-Native_Android_-orange)
 
@@ -86,14 +86,28 @@ In the **app-level build.gradle**, include Huawei Ads dependency (required by th
 
 ```groovy
 dependencies {
-    implementation 'com.huawei.hms:ads:3.4.49.301'
-    implementation 'com.github.Explore-In-HMS:huawei.ads.ironsource_mediation:<latest_version>'
+   //Huawei Ads Prime
+   implementation 'com.huawei.hms:ads-prime:<latest_version>'
+   //Adapter SDK
+   implementation 'com.github.Explore-In-HMS:huawei.ads.ironsource_mediation:<latest_version>'
 }
 ```
-[Check the latest Huawei Ads SDK here](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/publisher-service-version-change-history-0000001050066909)
 
-[Check the latest version of adapter here](#version-change-history)
+> **_NOTE:_**  If your app can run only on Huawei mobile phones, you can integrate the Huawei Ads Lite SDK instead of Huawei Ads SDK (Optional)
 
+```groovy
+dependencies {
+    //Huawei Ads Lite
+    implementation 'com.huawei.hms:ads-lite:<latest_version>'
+    ...
+}
+```
+
+<h3>Latest version of SDKs</h3>
+<ul>
+   <li><a href="https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/publisher-service-version-change-history-0000001050066909">Check Huawei Ads SDK here</a></li>
+   <li><a href="#version-change-history">Check the version of adapter here</a></li>
+</ul>
 
 ## **Permissions**
 The HUAWEI Ads SDK (com.huawei.hms:ads) has integrated the required permissions. Therefore, you do not need to apply for these permissions. <br />
@@ -111,6 +125,13 @@ The HUAWEI Ads SDK (com.huawei.hms:ads) has integrated the required permissions.
 **android.permission.WRITE_CALENDAR:** Creates a calendar event when a user clicks the subscription button in an ad. (The permission can be removed if not necessary.) <br />
 
 # Version Change History
+
+## 1.1.1
+
+<ul>
+  <li>Integration methods of Huawei Ads SDK in the plugin have been changed to <a href="https://docs.gradle.org/2.12/release-notes.html#support-for-declaring-compile-time-only-dependencies-with-java-plugin"><i>compileOnly</i></a>.</li>
+  <li>Huawei Ads SDK (lite or prime) has to be added externally to the app anymore.</li>
+</ul>
 
 ## 1.1.0
 
