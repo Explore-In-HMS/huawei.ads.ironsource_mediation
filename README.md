@@ -126,6 +126,13 @@ The HUAWEI Ads SDK (com.huawei.hms:ads) has integrated the required permissions.
 
 # Version Change History
 
+## 1.1.3
+
+<ul>
+  <li>Huawei Ads SDK version upgraded to <a href="https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/publisher-service-version-change-history-0000001050066909"><i>latest version</i></a>.</li>
+  <li>IronSource Android SDK version upgraded from 7.2.1 to <a href="https://developers.is.com/ironsource-mobile/android/android-sdk/#step-1"><i>7.3.0</i></a>.</li>
+</ul>
+
 ## 1.1.1
 
 <ul>
