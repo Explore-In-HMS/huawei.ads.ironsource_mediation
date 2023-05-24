@@ -1,9 +1,13 @@
 package com.ironsource.adapters.custom.huaweiadsadapter
 
 import android.app.Activity
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.view.doOnPreDraw
 import com.huawei.hms.ads.*
 import com.huawei.hms.ads.banner.BannerView
 import com.ironsource.mediationsdk.ISBannerSize
@@ -27,6 +31,23 @@ class HuaweiAdsAdapterCustomBanner(networkSettings: NetworkSettings) :
     private val AD_UNIT_ID = "adunitid"
 
     override fun loadAd(adData: AdData, activity: Activity, isBannerSize: ISBannerSize, listener: BannerAdListener) {
+
+        val isFlutterApp: Boolean = try {
+            Class.forName("io.flutter.app.FlutterActivity")
+            true
+        } catch (e: ClassNotFoundException) {
+            Log.e(TAG,e.message.toString())
+            false
+        }
+
+        val isUnityApp: Boolean = try {
+            Class.forName("com.unity3d.player.UnityPlayerActivity")
+            true
+        } catch (e: ClassNotFoundException) {
+            Log.e(TAG,e.message.toString())
+            false
+        }
+
         val instanceId = adData.getString(AD_UNIT_ID)
         Log.d(TAG, "BannerAdapter - loadAd() - for adUnitID: $instanceId")
 
@@ -76,11 +97,60 @@ class HuaweiAdsAdapterCustomBanner(networkSettings: NetworkSettings) :
         bannerView = BannerView(activity)
         bannerView!!.adId = instanceId
         bannerView!!.bannerAdSize = getAdSize(isBannerSize)
-
+        crossPlatformControl(activity,isFlutterApp,isUnityApp)
         bannerView!!.adListener = createAdListener(listener)
+        Log.d(TAG, "BannerAdapter - Huawei Banner Ad initialized")
         bannerView!!.loadAd(adRequest)
 
 
+
+    }
+
+    private fun crossPlatformControl(activity: Activity, isFlutterApp: Boolean, isUnityApp:Boolean){
+
+        if (isFlutterApp || isUnityApp) {
+            activity.runOnUiThread {
+                bannerView!!.visibility = View.INVISIBLE
+            }
+            bannerView!!.doOnPreDraw {
+                Log.d(
+                    TAG,
+                    "BannerEventLoader - loadAd() - doOnPreDraw - Optimizing banner ad rendering for cross platform"
+                )
+                activity.runOnUiThread {
+                    if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+                        val displayMetrics = Resources.getSystem().displayMetrics
+                        val bannerWidth = displayMetrics.heightPixels
+                        val bannerHeight = displayMetrics.widthPixels
+
+                        val calculatedCoeff = if (bannerHeight >= bannerWidth) {
+                            bannerHeight.toFloat() / bannerWidth
+                        } else {
+                            bannerWidth.toFloat() / bannerHeight
+                        }
+
+                        val params: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
+                            (it.width / calculatedCoeff).toInt(),
+                            (it.height / calculatedCoeff).toInt()
+                        )
+                        params.gravity = Gravity.CENTER
+
+                        bannerView!!.layoutParams = params
+                        Log.d(
+                            TAG,
+                            "BannerEventLoader - loadAd() - doOnPreDraw() - Calculated Coefficient:$calculatedCoeff, New width ${(it.width / calculatedCoeff).toInt()}, New Height: ${(it.height / calculatedCoeff).toInt()}"
+                        )
+
+                    } else {
+                        val params: FrameLayout.LayoutParams = FrameLayout.LayoutParams(it.width, it.height)
+                        params.gravity = Gravity.CENTER
+                        bannerView!!.layoutParams = params
+                    }
+                    bannerView!!.visibility = View.VISIBLE
+                }
+            }
+        }
 
     }
 
@@ -113,52 +183,46 @@ class HuaweiAdsAdapterCustomBanner(networkSettings: NetworkSettings) :
     }
 
 
-    private fun createAdListener(listener: BannerAdListener): AdListener {
+    private fun createAdListener(listener: BannerAdListener): AdListener{
         return object : AdListener(){
 
             override fun onAdClosed() {
                 super.onAdClosed()
-                Log.d(TAG, "BannerAdapter - AdListener() - Ad Closed!")
+                Log.d(TAG, "BannerAdapter - AdListener() - AdClosed")
                 listener.onAdScreenDismissed()
             }
 
             override fun onAdFailed(p0: Int) {
                 super.onAdFailed(p0)
-                Log.d(TAG, "BannerAdapter - AdListener() - Ad Failed! - Error Code: $p0")
+                Log.d(TAG, "BannerAdapter - AdListener() - AdFailed - Error Code: $p0")
                 listener.onAdLoadFailed(AdapterErrorType.ADAPTER_ERROR_TYPE_NO_FILL,p0, "Ad load failed")
             }
 
             override fun onAdLeave() {
                 super.onAdLeave()
-                Log.d(TAG, "BannerAdapter - AdListener() - Ad Leaved!")
+                Log.d(TAG, "BannerAdapter - AdListener() - AdLeave")
                 listener.onAdLeftApplication()
             }
 
             override fun onAdOpened() {
                 super.onAdOpened()
-                Log.d(TAG, "BannerAdapter - AdListener() - Ad Opened!")
+                Log.d(TAG, "BannerAdapter - AdListener() - AdOpened")
                 listener.onAdOpened()
             }
 
             override fun onAdLoaded() {
                 super.onAdLoaded()
-                Log.d(TAG, "BannerAdapter - AdListener() - Ad Loaded!!!")
-                listener.onAdLoadSuccess(bannerView as View,
-                    FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT))
+                Log.d(TAG, "BannerAdapter - AdListener() - AdLoaded!!!")
+                listener.onAdLoadSuccess(bannerView as View,FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT))
             }
 
             override fun onAdClicked() {
                 super.onAdClicked()
-                Log.d(TAG, "BannerAdapter - AdListener() - Ad Clicked!")
+                Log.d(TAG, "BannerAdapter - AdListener() - AdClicked")
                 listener.onAdClicked()
             }
-
         }
-
-
     }
-
-
 
     override fun destroyAd(adData: AdData) {
         Log.d(TAG, "Huawei Ads Banner onDestroy")
