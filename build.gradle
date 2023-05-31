@@ -8,8 +8,7 @@ buildscript {
         maven {
             url 'https://android-sdk.is.com/'
         }
-        maven { url 'https://developer.huawei.com/repo/' } // Add this line
-        maven {url "https://jitpack.io"} // Add this line
+        maven { url 'https://developer.huawei.com/repo/' }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.1.2"
