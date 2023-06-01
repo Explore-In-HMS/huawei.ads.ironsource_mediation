@@ -11,7 +11,7 @@ import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrors
 class HuaweiAdsAdapterCustomAdapter : BaseAdapter() {
 
     private fun getVersion() = ADAPTER_VERSION
-    private var ADAPTER_VERSION = "1.1.0"
+    private var ADAPTER_VERSION = "1.1.1"
     private val TAG = HuaweiAdsAdapterCustomAdapter::class.simpleName
 
 
