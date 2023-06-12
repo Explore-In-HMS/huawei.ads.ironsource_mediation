@@ -126,6 +126,14 @@ The HUAWEI Ads SDK (com.huawei.hms:ads) has integrated the required permissions.
 
 # Version Change History
 
+## 1.2.0
+
+<ul>
+  <li>Banner Ad support added </li>
+  <li>Huawei Ads SDK version upgraded to <a href="https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/publisher-service-version-change-history-0000001050066909"><i>latest version</i></a>.</li>
+  <li>IronSource Android SDK version upgraded from 7.3.0 to <a href="https://developers.is.com/ironsource-mobile/android/android-sdk/#step-1"><i>7.3.0.1</i></a>.</li>
+</ul>
+
 ## 1.1.3
 
 <ul>
@@ -162,6 +170,9 @@ Firstly, integrate the IronSource SDK for Android
 1) Developers can find app level build.gradle in their project from __**"app-folder/app/build.gradle"**__
 2) If you use the native ad format in your application, please submit a ticket [here](https://developer.huawei.com/consumer/en/support/feedback) to get support from Huawei. 
 
+### **Banner Ad**
+
+To use Banner ads in Native android apps, please check the IronSource SDK. Click [here](https://developers.is.com/ironsource-mobile/android/banner-integration-android/) to get more information about IronSource SDKs Banner Ad development.
 
 ### **Interstitial Ad**
 
@@ -172,6 +183,18 @@ To use Rewarded ads in Native android apps, please check the IronSource SDK. Cli
 
 ## **Sample Codes Based on Ad Types**
 
+### **Banner Ad**
+
+```jsx
+        // instantiate IronSourceBanner object, using the IronSource.createBanner API
+        val banner = IronSource.createBanner(this, ISBannerSize(320, 50))
+        // init the IronSource SDKAPP_KEY
+        IronSource.init(this, APP_KEY, IronSource.AD_UNIT.BANNER);
+        // load ad into the created banner
+        IronSource.loadBanner(banner);
+        // add IronSourceBanner to your container
+        findViewById<FrameLayout>(R.id.frame).addView(banner)
+```
 ### **Interstitial Ad**
 
 ```jsx
@@ -203,6 +226,37 @@ To use Rewarded ads in Native android apps, please check the IronSource SDK. Cli
         if (IronSource.isRewardedVideoAvailable()) //show rewarded video
               IronSource.showRewardedVideo()
 ```
+
+## Flutter
+This section demonstrates how to use IronSource feature with Huawei Ads Kit on Flutter.
+
+Make sure to check the article on [How to use Huawei Ads with IronSource Mediation in Flutter?](https://medium.com/huawei-developers/how-to-use-huawei-ads-with-ironsource-mediation-in-flutter-cdf07e33ee18)
+
+**Supported Ad Formats are:** Banner Ads, Interstitial Ads and Rewarded Ads.
+
+Firstly, integrate the IronSource Flutter Plugin to Flutter.
+
+For more details on IronSource Flutter Plugin visit [here](https://developers.is.com/ironsource-mobile/flutter/flutter-plugin/)
+
+### **Banner Ads**
+To use Banner ads in Flutter , please check the IronSource Flutter Plugin. Click [here](https://developers.is.com/ironsource-mobile/flutter/banner-integration-flutter/) to get more information about IronSource Flutter Banner Ad development.
+
+### **Interstitial Ads**
+To use Interstitial ads in Flutter, please check the IronSource Flutter Plugin. Click [here](https://developers.is.com/ironsource-mobile/flutter/interstitial-integration-flutter/) to get more information about IronSource Flutter Interstitial Ad development.
+
+### **Rewarded Ads**
+To use Rewarded ads in Flutter, please check the IronSource Flutter Plugin. Click [here](https://developers.is.com/ironsource-mobile/flutter/rewarded-video-integration-flutter/) to get more information about IronSource Flutter Banner Ad development.
+
+
+
+
+#### **Step 1:**
+Add the line **ironsource_mediation: ^1.1.0** to the dependicies section of your pubspec.yalm file
+#### **Step 2:**
+Go to android file of your project and add necessary configurations in [**Integrate the Huawei Mediation SDK**](#integrate-huawei-sdk) section
+
+After these configurations is completed you can display Huawei Ads.
+
 
 # Screenshots
 
