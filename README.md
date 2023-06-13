@@ -1,8 +1,9 @@
 # Huawei-IronSource Mediation Github Documentation
 
-![Latest Version](https://img.shields.io/badge/latestVersion-1.1.3-yellow) ![Kotlin](https://img.shields.io/badge/language-kotlin-blue)
+![Latest Version](https://img.shields.io/badge/latestVersion-1.2.0-yellow) ![Kotlin](https://img.shields.io/badge/language-kotlin-blue)
 <br>
 ![Supported Platforms](https://img.shields.io/badge/Supported_Platforms:-Native_Android_-orange)
+![Supported Platforms](https://img.shields.io/badge/-Flutter_-blue)
 
 
 # Introduction
@@ -11,9 +12,10 @@ This is a project to demonstrate how to use IronSource’s mediation feature wit
 
 # Compatibility
 
-|   |  | Interstitial Ad | Rewarded Ad |
-| --- | --- | --- | --- |
-| Native (Java/Kotlin) |  | ✅ | ✅ |
+| Platform             | Banner Ad | Interstitial Ad | Rewarded Ad |
+|----------------------|-----------| --- | --- |
+| Native (Java/Kotlin) |      ✅     | ✅ | ✅ |
+| Flutter (Dart)       |      ✅     | ✅ | ✅ |
 
 
 # How to start?
