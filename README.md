@@ -265,7 +265,10 @@ After these configurations is completed you can display Huawei Ads.
 ## IronSource Ads
 <table>
 <tr>
+<td>
+  <img src="https://github.com/Explore-In-HMS/huawei.ads.ironsource_mediation/assets/48774168/0e342edc-e42c-4c61-9473-eeb8441b0535" width="200">
 
+Banner Ad
 <td>
   <img src="https://user-images.githubusercontent.com/19581388/144861246-62110f27-c0a5-451b-a28d-0cb4087c2c48.jpg" width="200">
 
@@ -284,7 +287,10 @@ Rewarded Ad
 ## Huawei Ads
 <table>
 <tr>
+<td>
+  <img src="https://github.com/Explore-In-HMS/huawei.ads.ironsource_mediation/assets/48774168/c78f7428-3d55-4c06-83f8-56bf9efb1b52" width="200">
 
+Banner Ad
 <td>
   <img src="https://user-images.githubusercontent.com/19581388/144861185-0991ebf4-7814-4642-bd2d-f83ad5a241bb.jpg" width="200">
 
